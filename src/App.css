@@ -1,11 +1,39 @@
 .App {
   text-align: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  min-width: 100vw;
+  padding-left: 30px;
+  padding-right: 30px;
+  min-height: 98vh;
+  height: auto;
+  box-sizing: border-box;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+#root{
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  min-width: 100%;
+  min-height: 98vh;
 }
+
+body{
+  background-color: #d68296;
+  margin: 0;
+  padding: 0;
+  min-height: 98vh;
+  height: 98vh;
+  box-sizing: border-box;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none;   /* Chrome/Safari/Opera */
+  -khtml-user-select: none;    /* Konqueror */
+  -moz-user-select: none;      /* Firefox */
+  -ms-user-select: none;       /* Internet Explorer/Edge */
+  user-select: none;
+}
+
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
@@ -35,4 +63,19 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+a:active, a:focus { outline: none; }
+
+input, textarea {outline:none;}
+input:active, textarea:active {outline:none;}
+:focus {outline:none;}
+textarea {resize:none;}
+textarea {resize:vertical;}
+textarea {resize:horizontal;}
+button:active, button:focus {
+  outline: none;
+}
+button::-moz-focus-inner {
+  border: 0;
 }
