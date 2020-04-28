@@ -150,7 +150,7 @@ export default function ContainerColumn(props) {
                             }}/>
                     }
                 </Title>
-                {!addTask && isEdit &&
+                {!addTask && isEdit &&  title === editTitle &&
                 <AddTask>
                     <Textarea ref={textarea} required placeholder='Название блока'/>
                     <i className='im im-save' onClick={saveTitle}/>
