@@ -137,6 +137,7 @@ const Task = styled.div`
 export default function ContainerTask(props) {
     let {task, title, changeTask, deleteTask, changeColumn} = props;
     let [isEdit, setIsEdit] = useState(false);
+    let [value, setValue] = useState(task);
     let [posY, setPosY] = useState(null);
     let [posX, setPosX] = useState(null);
     let [width, setWidth] = useState(null);
@@ -168,11 +169,13 @@ export default function ContainerTask(props) {
         }
     });
 
-
+    function changeValue(event) {
+        setValue(event.target.value);
+    }
 
     function save() {
-        if (inputEl.current.value ) {
-            changeTask(task, inputEl.current.value , title);
+        if (value ) {
+            changeTask(task, value , title);
             setIsEdit(!isEdit);
         } else {
             inputEl.current.placeholder = 'пусто';
@@ -194,7 +197,7 @@ export default function ContainerTask(props) {
             <Task className='task' ref={mainRef} id={task} key={task} isEdit={isEdit}>
                 {(isEdit) ?
                     <>
-                        <textarea  resize='none' ref={inputEl} defaultValue={task}/>
+                        <textarea  onChange={changeValue} ref={inputEl} defaultValue={task}/>
                         <Button onClick={save}>
                             <div onClick={save}>Сохранить</div>
                         </Button>

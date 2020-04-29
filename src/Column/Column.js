@@ -102,6 +102,7 @@ export default function ContainerColumn(props) {
     } = props;
     let bc = '#c84b3a';
     let [isEdit, setIsEdit] = useState(false);
+    let [value, setValue] = useState('');
     const textarea = useRef(null);
 
     useEffect(() => {
@@ -113,11 +114,16 @@ export default function ContainerColumn(props) {
         }
     });
 
+    function changeValue(event) {
+        setValue(event.target.value);
+    }
+
 
     function save() {
-        if (textarea.current.value) {
-            addTask(textarea.current.value, title, tasks.length);
+        if (value) {
+            addTask(value, title, tasks.length);
             setIsEdit(!isEdit);
+            setValue('');
         } else {
             textarea.current.placeholder = 'пусто';
         }
@@ -125,9 +131,10 @@ export default function ContainerColumn(props) {
     }
 
     function saveTitle() {
-        if (textarea.current.value) {
-            addColumn(textarea.current.value);
+        if (value) {
+            addColumn(value);
             setIsEdit(!isEdit);
+            setValue('');
         } else {
             textarea.current.placeholder = 'пусто';
         }
@@ -152,7 +159,7 @@ export default function ContainerColumn(props) {
                 </Title>
                 {!addTask && isEdit &&  title === editTitle &&
                 <AddTask>
-                    <Textarea ref={textarea} required placeholder='Название блока'/>
+                    <Textarea ref={textarea} onChange={changeValue} required placeholder='Название блока'/>
                     <i className='im im-save' onClick={saveTitle}/>
                 </AddTask>
                 }
@@ -173,7 +180,7 @@ export default function ContainerColumn(props) {
                     {isEdit && title === editTitle ?
                         <>
                             <i className='im im-minus' onClick={() => setIsEdit(false)}/>
-                            <Textarea ref={textarea} required placeholder='Задача'/>
+                            <Textarea ref={textarea} onChange={changeValue} required placeholder='Задача'/>
                             <i className='im im-save' onClick={save}/>
                         </> :
                         <i className='im im-plus' onClick={() => {
