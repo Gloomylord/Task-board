@@ -21,6 +21,16 @@ const Column = styled.div`
       padding-top: 0;
       border-radius: 6px;
       margin: 10px;
+      ${(props) => !props.addTask && `background-color: rgba(255,255,255,0.4);` +
+      `:hover{
+          background-color: rgba(255,255,255,0.5);
+       }
+       :active{
+          background-color: rgba(255,255,255,0.6);
+       }
+      `
+
+}
 `;
 
 const Title = styled.div`
@@ -52,6 +62,24 @@ const Title = styled.div`
             opacity: 1;
          }
       }
+      ${props => !props.addTask &&`
+        :hover {
+            color: #333333;
+            .im{
+                opacity: 1;
+            }            
+         }
+        .im {
+            color: #333333;
+            opacity: 1;
+            :hover {
+                opacity: 1;
+            }
+            :active {
+                opacity: 1;
+            }
+        }
+`}
 `;
 const AddTask = styled.div`
       box-sizing: border-box;
@@ -160,17 +188,23 @@ export default function ContainerColumn(props) {
 
     return (
         <Container id={'t' + title} className={addTask && 'container'}>
-            <Column id={title} className={addTask && 'droppable'}>
-                <Title id={(addTask) ? 'm' + title : ''}>
+            <Column id={title} className={addTask && 'droppable'} addTask={addTask}>
+                <Title id={(addTask) ? 'm' + title : ''} addTask={addTask}  onClick={()=>{
+                    if(!addTask ) {
+                        if(!isEdit) {
+                            setIsEdit(true);
+                            setEditTitle(title);
+                        } else {
+                            setIsEdit(false);
+                        }
+                    }
+                }}>
                     <div>{title}</div>
                     {addTask ?
                         <i className='im im-x-mark' onClick={() => deleteColumn(title)}/> :
                         isEdit && title === editTitle ?
                             <i className='im im-minus' onClick={() => setIsEdit(false)}/> :
-                            <i className='im im-plus' onClick={() => {
-                                setIsEdit(true);
-                                setEditTitle(title);
-                            }}/>
+                            <i className='im im-plus'/>
                     }
                 </Title>
                 {

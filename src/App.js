@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import './iconmonstr-iconic-font-1.3.0/css/iconmonstr-iconic-font.css';
 import './iconmonstr-iconic-font-1.3.0/css/iconmonstr-iconic-font.min.css';
 import {nanoid} from 'nanoid';
+import Menu from "./Menu/Menu";
 
 
 let Delete = styled.div`
@@ -20,7 +21,7 @@ let Delete = styled.div`
     clip-path: circle(50%);
     position: fixed;
     bottom: 25px;
-    left: 100px;
+    left: 50px;
     opacity: 0.9;
     transition-duration: 200ms;
     @media (max-height: 500px){
@@ -63,15 +64,24 @@ function addId(arr) {
     return arr;
 }
 
+function sortId(a, b) {
+    a = a.index;
+    b = b.index;
+    if (a > b) return 1;
+    if (b > a) return -1;
+    if (a === b) return 0;
+}
+
+function makeColumnArr(arr) {
+    return Array.from(new Set(arr.map(value => value.column)))
+}
+
+
 function App() {
     const [column, setColumn] = useState(makeColumnArr(arrTasks));
     const [tasks, setTasks] = useState(addId(arrTasks));
     const [editTitle, setEditTitle] = useState(null);
 
-
-    function makeColumnArr(arr) {
-        return Array.from(new Set(arr.map(value => value.column)))
-    }
 
     function changeColumn(id, column, index) {
         let taskColumn, taskIndex;
@@ -235,13 +245,7 @@ function App() {
         setColumn(arr);
     }
 
-    function sortId(a, b) {
-        a = a.index;
-        b = b.index;
-        if (a > b) return 1;
-        if (b > a) return -1;
-        if (a === b) return 0;
-    }
+
 
 
     console.log('-------------------------');
@@ -275,6 +279,7 @@ function App() {
                 />
             </div>
             <Delete id='delete'/>
+            <Menu/>
         </>
 
     );
