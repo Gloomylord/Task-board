@@ -6,7 +6,6 @@ import moveTask from "./MoveTask";
 let mar = 10;
 
 const Background = styled.div`
-      
       max-width: 100vw !important;
       width: 100vw;
       height: 100vh;
@@ -26,11 +25,16 @@ const BackgroundBlock = styled.div`
       margin: ${mar}px;
 `;
 
+const Buttons = styled.div`
+      display: flex;
+      align-self: start;
+`;
+
 const Button = styled.button`
       box-sizing: border-box;
       background-color: rgb(96,204,52);
       color: white;
-      border-radius: 5px;
+      border-radius: 3px;
       font-size: 16px;
       border: 0;
       margin-bottom: 10px;
@@ -46,29 +50,32 @@ const Button = styled.button`
       }
 `;
 
-
+const  Text = styled.div`
+  align-self: center;
+  text-align: start;
+  white-space: pre-wrap;
+  max-width: 240px;
+  word-wrap: break-word;
+  line-height: 1.5em;
+`;
 
 const Task = styled.div`
       box-sizing: border-box;
       display: flex;
-      align-items: center;
       margin: ${mar}px;
       flex-direction: row;
       justify-content: space-between;
       font-size: 14px;
       color: #6d6d6d;
-      width: 95%;
+      width: 320px;
       padding: 8px 12px 4px;
       cursor: pointer;
       border-radius: 3px;
       transition: transform 200ms, opacity 200ms, color 200ms, height 1000ms;
       background: white;
+      box-shadow: 0px 1px 0px #4c4c4c;
       :hover {
-        background: #fcfcfc;
-      }
-      
-      div {
-         max-width: 250px;
+          background: #fcfcfc;
       }
       
       i {
@@ -116,6 +123,7 @@ const Task = styled.div`
         padding: 5px;
         resize: none;
       }
+      
       .im-save {
         opacity: 1 !important;
         color: green;
@@ -127,15 +135,15 @@ const Task = styled.div`
       ${(props) => props.isEdit &&
     'position: absolute;' +
     'z-index: 1000;' +
-    'width: 332px;'+
-    'flex-direction: column;'+
+    'width: 320px;' +
+    'flex-direction: column;' +
     'margin: 0;'
 }
 `;
 
 
 export default function ContainerTask(props) {
-    let {task, title, changeTask, deleteTask, changeColumn} = props;
+    let {task, changeTask, deleteTask, changeColumn,id} = props;
     let [isEdit, setIsEdit] = useState(false);
     let [value, setValue] = useState(task);
     let [posY, setPosY] = useState(null);
@@ -143,14 +151,13 @@ export default function ContainerTask(props) {
     let [width, setWidth] = useState(null);
     let [height, setHeight] = useState(null);
     const inputEl = useRef(null);
-    const taskRef = useRef(null);
     const mainRef = useRef(null);
     const taskBackground = useRef(null);
 
     useEffect(() => {
-        moveTask(task, changeColumn, deleteTask,isEdit);
+        moveTask(id, changeColumn, deleteTask,isEdit);
         return () => {
-            document.getElementById(task).onmousedown = null;
+            document.getElementById(id).onmousedown = null;
         }
     });
 
@@ -158,10 +165,12 @@ export default function ContainerTask(props) {
         if (inputEl.current) {
             inputEl.current.focus();
         }
+
         if(mainRef.current && posY && posX){
             mainRef.current.style.top = posY + 'px';
             mainRef.current.style.left = posX + 'px';
         }
+
         if(taskBackground.current && height && width){
             console.log(height, width);
             taskBackground.current.style.width =  width + 'px';
@@ -175,7 +184,7 @@ export default function ContainerTask(props) {
 
     function save() {
         if (value ) {
-            changeTask(task, value , title);
+            changeTask(value , id);
             setIsEdit(!isEdit);
         } else {
             inputEl.current.placeholder = 'пусто';
@@ -194,7 +203,7 @@ export default function ContainerTask(props) {
     return (<>
             {isEdit && <BackgroundBlock ref={taskBackground} />}
             {isEdit && <Background className='full' onClick={() => setIsEdit(!isEdit)}/>}
-            <Task className='task' ref={mainRef} id={task} key={task} isEdit={isEdit}>
+            <Task className='task' ref={mainRef} id={id} isEdit={isEdit}>
                 {(isEdit) ?
                     <>
                         <textarea  onChange={changeValue} ref={inputEl} defaultValue={task}/>
@@ -203,12 +212,12 @@ export default function ContainerTask(props) {
                         </Button>
                     </> :
                     <>
-                        <div>{task}</div>
-                        <div>
+                        <Text>{task}</Text>
+                        <Buttons>
                             <i className='im im-edit' onClick={edit}/>
                             <i className='im im-x-mark-circle-o'
-                               onClick={() => deleteTask(task)}/>
-                        </div>
+                               onClick={() => deleteTask(id)}/>
+                        </Buttons>
                     </>
                 }
             </Task>

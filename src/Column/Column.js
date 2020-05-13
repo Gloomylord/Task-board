@@ -9,9 +9,12 @@ import MoveColumn from "./MoveColumn";
 
 const Column = styled.div`
       display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      max-height: calc(98vh - 55px);
       align-items: center;
       align-self: flex-start;
-      flex-direction: column;
+      justify-content: center;
       background-color: #e1e3e5;
       transition: background-color 200ms;
       width: 350px;
@@ -23,13 +26,13 @@ const Column = styled.div`
 const Title = styled.div`
       box-sizing: border-box;
       flex-direction: row;
+      width: 330px;
       justify-content: space-between;
       display: flex;
       align-items: center;
       text-align: center;
       font-size: 15px;
       font-weight: 600;
-      width: 95%;
       color: #555555;
       padding: 15px;
       cursor: pointer;
@@ -55,10 +58,10 @@ const AddTask = styled.div`
       flex-direction: row;
       justify-content: space-between;
       display: flex;
+      width: 330px;
       align-items: center;
       text-align: center;
       font-size: 14px;
-      width: 95%;
       color: #555555;
       padding: 15px;
       > .im {
@@ -94,11 +97,24 @@ const Container = styled.div`
         flex-direction: column;
 `;
 
+const TasksContainer = styled.div`
+      display: flex;
+      flex-direction: column;
+      max-height: calc(100% - 110px);
+      align-items: center;
+      overflow: auto;
+      padding: 2px 0;
+      box-sizing: border-box;
+      > :first-child{
+        margin-top: 0;
+      }
+`;
+
 
 export default function ContainerColumn(props) {
     let {
         setEditTitle, editTitle, addColumn, addTask, deleteColumn,
-        changeTask, changeColumn, title, tasks, deleteTask,changeTitlePlace
+        changeTask, changeColumn, title, tasks, deleteTask, changeTitlePlace
     } = props;
     let bc = '#c84b3a';
     let [isEdit, setIsEdit] = useState(false);
@@ -109,7 +125,7 @@ export default function ContainerColumn(props) {
         if (textarea.current) {
             textarea.current.focus();
         }
-        if(title !== 'Новый блок') {
+        if (title !== 'Новый блок') {
             MoveColumn('m' + title, changeTitlePlace, deleteColumn);
         }
     });
@@ -157,23 +173,28 @@ export default function ContainerColumn(props) {
                             }}/>
                     }
                 </Title>
-                {!addTask && isEdit &&  title === editTitle &&
-                <AddTask>
-                    <Textarea ref={textarea} onChange={changeValue} required placeholder='Название блока'/>
-                    <i className='im im-save' onClick={saveTitle}/>
-                </AddTask>
+                {
+                    !addTask && isEdit && title === editTitle &&
+                    <AddTask>
+                        <Textarea ref={textarea} onChange={changeValue} required placeholder='Название блока'/>
+                        <i className='im im-save' onClick={saveTitle}/>
+                    </AddTask>
                 }
-                {tasks.map((value) => (
-                    <Task key={value.task}
-                          task={value.task}
-                          changeColumn={changeColumn}
-                          bc={bc}
-                          title={title}
-                          deleteTask={deleteTask}
-                          changeTask={changeTask}
+                <TasksContainer className='tasks-container'>
+                    {
+                        tasks.map((value) => (
+                            <Task key={value.id}
+                                  task={value.task}
+                                  id={value.id}
+                                  changeColumn={changeColumn}
+                                  bc={bc}
+                                  title={title}
+                                  deleteTask={deleteTask}
+                                  changeTask={changeTask}
 
-                    />))
-                }
+                            />))
+                    }
+                </TasksContainer>
 
                 {addTask &&
                 <AddTask className='edit'>

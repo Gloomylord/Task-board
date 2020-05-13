@@ -4,12 +4,8 @@ import Column from "./Column/Column";
 import styled from 'styled-components';
 import './iconmonstr-iconic-font-1.3.0/css/iconmonstr-iconic-font.css';
 import './iconmonstr-iconic-font-1.3.0/css/iconmonstr-iconic-font.min.css';
-import index from "styled-components/dist/styled-components-macro.esm";
+import {nanoid} from 'nanoid';
 
-let Container = styled.div`
-    display: flex;
-    flex-direction: column;
-`;
 
 let Delete = styled.div`
     background-image: url(/82-512.webp);
@@ -23,10 +19,15 @@ let Delete = styled.div`
     height: 100px;
     clip-path: circle(50%);
     position: fixed;
-    bottom: 50px;
+    bottom: 25px;
     left: 100px;
     opacity: 0.9;
     transition-duration: 200ms;
+    @media (max-height: 500px){
+      bottom: -125px;
+      transition: 500ms
+      ;
+    }
 
 `;
 
@@ -37,40 +38,61 @@ let arrColumns = [
 ];
 
 let arrTasks = [
-    {id: 1, task: 'учить JS', column: 'В процессе'},
-    {id: 1, task: 'заняться спортом', column: 'Планируется'},
-    {id: 2, task: 'изучить styled-components', column: 'В процессе'},
-    {id: 3, task: 'овладеть React Hooks', column: 'В процессе'},
-    {id: 2, task: "сделять Drag'n'Drop", column: 'Планируется'},
-    {id: 1, task: "покушать", column: 'Завершено'},
+    {index: 1, task: 'учить JS', column: 'В процессе'},
+    {index: 2, task: 'учить JS', column: 'Планируется'},
+    {index: 3, task: 'учить JS', column: 'Планируется'},
+    {index: 4, task: 'учить JS', column: 'Планируется'},
+    {index: 5, task:  ' учить JS учить JSучить JSучитьJSучитьJSучитьJSучитьJSучитьJSучитьJS', column: 'Планируется'},
+    {index: 6, task: 'учить JS', column: 'Планируется'},
+    {index: 7, task: 'учить JS', column: 'Планируется'},
+
+    {index: 1, task: 'заняться спортом', column: 'Планируется'},
+    {index: 2, task: 'изучить styled-components', column: 'В процессе'},
+    {index: 3, task: 'овладеть React Hooks', column: 'В процессе'},
+    {index: 2, task: "сделять Drag'n'Drop", column: 'Завершено'},
+    {index: 1, task: "покушать", column: 'Завершено'},
 ];
 
+function addId(arr) {
+    arr.map(value => {
+            value.id = nanoid();
+            return value;
+        }
+    );
+    console.log('arr', arr);
+    return arr;
+}
+
 function App() {
-    const [column, setColumn] = useState(arrColumns);
-    const [tasks, setTasks] = useState(arrTasks);
+    const [column, setColumn] = useState(makeColumnArr(arrTasks));
+    const [tasks, setTasks] = useState(addId(arrTasks));
     const [editTitle, setEditTitle] = useState(null);
 
 
-    function changeColumn(task, column, id) {
-        let taskColumn, taskId;
+    function makeColumnArr(arr) {
+        return Array.from(new Set(arr.map(value => value.column)))
+    }
+
+    function changeColumn(id, column, index) {
+        let taskColumn, taskIndex;
         tasks.forEach((value) => {
-            if (value.task == task) {
+            if (value.id === id) {
                 taskColumn = value.column;
-                taskId = value.id;
+                taskIndex = value.index;
             }
         });
-        console.log('task, column', task, column, id);
-        if (!id) {
-            let id;
+        console.log('task, column', id, column, index);
+        if (!index) {
+            let index;
             if (taskColumn === column) {
-                id = tasks.filter((value => (value.column === column))).length;
+                index = tasks.filter((value => (value.column === column))).length;
                 setTasks(tasks.map((value) => {
                     if (value.column === column) {
-                        if (value.id > taskId && value.id <= id) {
-                            return {id: +value.id - 1, task: value.task, column: value.column};
+                        if (value.index > taskIndex && value.index <= index) {
+                            return {index: +value.index - 1, id: value.id, task: value.task, column: value.column};
                         }
-                        if (value.task === task) {
-                            return {id: id, task, column};
+                        if (value.id === id) {
+                            return {index: index, task: value.task, column, id};
                         }
                         return value;
                     }
@@ -78,15 +100,15 @@ function App() {
                     return value;
                 }));
             } else {
-                id = tasks.filter((value => (value.column === column))).length + 1;
+                index = tasks.filter((value => (value.column === column))).length + 1;
                 setTasks(tasks.map((value) => {
                     if (taskColumn === value.column) {
-                        if (value.id > taskId ) {
-                            return {id: +value.id - 1, task: value.task, column: value.column};
+                        if (value.index > taskIndex) {
+                            return {index: +value.index - 1, id: value.id, task: value.task, column: value.column};
                         }
                     }
-                    if (value.task === task) {
-                        return {id: id, task, column};
+                    if (value.id === id) {
+                        return {index: index, task: value.task, id, column};
                     }
                     return value;
                 }));
@@ -98,33 +120,33 @@ function App() {
             if (taskColumn !== column) {
                 setTasks(tasks.map((value) => {
                     if (value.column === column) {
-                        if (value.id > id) {
-                            return {id: +value.id + 1, task: value.task, column: value.column};
+                        if (value.index > index) {
+                            return {index: +value.index + 1, id: value.id, task: value.task, column: value.column};
                         }
                     }
                     if (value.column === taskColumn) {
-                        if (value.id > taskId) {
-                            return {id: +value.id - 1, task: value.task, column: value.column};
+                        if (value.index > taskIndex) {
+                            return {index: +value.index - 1, id: value.id, task: value.task, column: value.column};
                         }
                     }
-                    if (value.task === task) {
-                        return {id: +id + 1, task, column};
+                    if (value.id === id) {
+                        return {index: +index + 1, id, task: value.task, column};
                     }
                     return value;
                 }));
             } else {
-                id = +id + 1;
-                console.log(+ id + 1,taskId);
+                index = +index + 1;
+                console.log(+index + 1, taskIndex);
                 setTasks(tasks.map((value) => {
                     if (value.column === column) {
-                        if (value.task === task) {
-                            return {id: id , task, column};
+                        if (value.id === id) {
+                            return {index: index, task: value.task, column, id};
                         }
-                        if (value.id >= id && value.id < taskId) {
-                            return {id: +value.id + 1, task: value.task, column: value.column};
+                        if (value.index >= index && value.index < taskIndex) {
+                            return {index: +value.index + 1, id: value.id, task: value.task, column: value.column};
                         }
-                        if (value.id <= id  && value.id >= taskId){
-                            return {id: +value.id - 1, task: value.task, column: value.column};
+                        if (value.index <= index && value.index >= taskIndex) {
+                            return {index: +value.index - 1, id: value.id, task: value.task, column: value.column};
                         }
 
                     }
@@ -135,8 +157,8 @@ function App() {
         }
 
         //
-        // a.forEach(({id, task, column}) => {
-        //     console.log(id, task, column);
+        // a.forEach(({index, task, column}) => {
+        //     console.log(index, task, column);
         // });
 
         // let newTasks = [...tasks];
@@ -147,31 +169,30 @@ function App() {
         // }
     }
 
-    function deleteTask(task) {
+    function deleteTask(id) {
         setTasks(tasks.filter((value) =>
-            value.task !== task)
+            value.id !== id)
         )
     }
 
-    function changeTask(lastTask, newTask, title, id) {
-        if (!id) {
-            setTasks(tasks.map((value) => {
-                    return (value.task !== lastTask) ? value :
-                        {
-                            id: value.id,
-                            task: newTask,
-                            column: title,
-                        }
-                })
-            );
-        }
+    function changeTask(newTask, id) {
+        setTasks(tasks.map((value) => {
+                return (value.id !== id) ? value :
+                    {
+                        index: value.index,
+                        id: value.id,
+                        task: newTask,
+                        column: value.column,
+                    }
+            })
+        );
     }
 
 
     function addTask(task, title) {
-        let id = tasks.filter((value) => (value.column === title)).sort(sortId).length + 1;
+        let index = tasks.filter((value) => (value.column === title)).length + 1;
         setTasks(tasks.concat([{
-            id: id,
+            index: index,
             task: task,
             column: title,
         }]));
@@ -182,77 +203,57 @@ function App() {
         setColumn(column.concat([title]));
     }
 
-    function deteteColumn(title) {
+    function deleteColumn(title) {
         setColumn(column.filter((value) => value !== title));
-        setTasks(tasks.filter((value)=> value.column!==title))
+        setTasks(tasks.filter((value) => value.column !== title))
     }
 
-    function changeTitlePlace(title,replaceTitle,isBefore) {
-        let lastId,id;
+    function changeTitlePlace(title, replaceTitle, isBefore) {
+        let lastId, index;
         let arr = [...column];
-        if(title === replaceTitle) return;
+        if (title === replaceTitle) return;
 
-        arr.forEach((value,index) => {
-            if(value === title) lastId = index;
+        arr.forEach((value, index) => {
+            if (value === title) lastId = index;
         });
 
-        arr.forEach((value,index) => {
-            if(value === replaceTitle) id = index;
+        arr.forEach((value, i) => {
+            if (value === replaceTitle) index = i;
         });
 
-        if(!isBefore) id += 1;
+        if (!isBefore) index += 1;
 
-        if(id > lastId) {
+        if (index > lastId) {
             let value = arr.splice(lastId, 1);
-            arr.splice(id - 1, 0, title);
-            console.log(id, lastId, arr, value[0],title);
+            arr.splice(index - 1, 0, title);
+            console.log(index, lastId, arr, value[0], title);
         } else {
             let value = arr.splice(lastId, 1);
-            arr.splice(id, 0, title);
-            console.log(id, lastId, arr, value[0],title);
+            arr.splice(index, 0, title);
+            console.log(index, lastId, arr, value[0], title);
         }
         setColumn(arr);
     }
 
     function sortId(a, b) {
-        a = a.id;
-        b = b.id;
+        a = a.index;
+        b = b.index;
         if (a > b) return 1;
         if (b > a) return -1;
-        if (a == b) return 0;
+        if (a === b) return 0;
     }
 
-    function changeStr(str) {
-        let newStr = '';
-        let letter = str[0];
-        let count = 1;
-        for (let i = 0; i < str.length; i++) {
-            if (str[i] === str[i + 1]) {
-                count += 1;
-            } else {
-                if (count > 1) {
-                    newStr += letter + count;
-                } else {
-                    newStr += letter;
-                }
-                letter = str[i + 1];
-                count = 1;
-            }
-        }
 
-        return newStr;
-    }
-
-    //console.log(changeStr('AAAAABBBBBCCCGAAEEQAAAAA'), 'A5B5C3GA2E2QA5', 'A5B5C3GA2E2QA5' == changeStr('AAAAABBBBBCCCGAAEEQAAAAA'));
     console.log('-------------------------');
     console.log(editTitle);
 
     return (<>
             <div className="App">
-                {column.map((title,index) => {
+                {column.map((title, index) => {
                     let a = tasks.filter((value) => (value.column === title));
                     a.sort(sortId);
-                    return < Column key={title}
+                    console.log(a);
+                    return < Column key={title + index}
                                     title={title}
                                     tasks={a}
                                     deleteTask={deleteTask}
@@ -261,7 +262,7 @@ function App() {
                                     addTask={addTask}
                                     setEditTitle={setEditTitle}
                                     editTitle={editTitle}
-                                    deleteColumn={deteteColumn}
+                                    deleteColumn={deleteColumn}
                                     changeTitlePlace={changeTitlePlace}
                     />
                 })}

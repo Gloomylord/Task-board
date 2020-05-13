@@ -11,6 +11,11 @@
   box-sizing: border-box;
 }
 
+.App > :first-child > :first-child{
+  max-height: calc(98vh - 180px);
+}
+
+
 #root{
   box-sizing: border-box;
   display: flex;
@@ -20,7 +25,8 @@
 }
 
 body{
-  background-color: #d68296;
+  background-color: #e88da3;
+  overflow-y: hidden;
   margin: 0;
   padding: 0;
   min-height: 98vh;
@@ -56,6 +62,7 @@ body{
   color: #61dafb;
 }
 
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);
@@ -65,6 +72,12 @@ body{
   }
 }
 
+
+@media (max-height: 500px) {
+  .App > :first-child > :first-child{
+    max-height: calc(98vh - 55px);
+  }
+}
 a:active, a:focus { outline: none; }
 
 input, textarea {outline:none;}
@@ -79,3 +92,6 @@ button:active, button:focus {
 button::-moz-focus-inner {
   border: 0;
 }
+
+
+

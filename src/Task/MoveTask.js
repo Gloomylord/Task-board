@@ -1,12 +1,13 @@
-export default function (task, changeColumn, deleteTask,isEdit) {
-    let Task = document.getElementById(task);
-    let width = Task.getBoundingClientRect().width;
-    if(!isEdit) {
+export default function (id, changeColumn, deleteTask, isEdit) {
+    let Task = document.getElementById(id);
+    let height = Task.getBoundingClientRect().height;
+
+    if (!isEdit) {
         Task.onmousedown = function onmousedown(event) {
+
             if (event.target.className.indexOf('im') >= 0) return;
             let style = Task.style;
             Task.style.cursor = 'grabbing';
-            Task.style.width = width + 'px';
 
             let shiftX = event.clientX - Task.getBoundingClientRect().left;
             shiftX -= Task.style.marginLeft.slice(-Task.style.marginLeft.length + 1, -2);
@@ -15,14 +16,18 @@ export default function (task, changeColumn, deleteTask,isEdit) {
 
             let div = document.createElement('div');
             div.id = 'insertionPoint';
-            div.className = Task.className.replace('task', '');
-            div.style.height = Task.getBoundingClientRect().height + 'px';
-            div.style.background = '#fafafa';
+            div.className = Task.className.replace('task','');
+            div.style.height = height + 'px';
+            div.style.backgroundColor = '#a0837d';
+            div.style.border = '';
+            div.style.margin = Task.style.margin;
+            div.style.borderRadius = '5px';
             Task.before(div);
+            console.log(height,div.getBoundingClientRect().height);
             Task.style.position = 'absolute';
             Task.style.margin = 0;
             Task.style.zIndex = 1000;
-
+            console.log(div.style);
 
             moveAt(event.pageX, event.pageY);
 
@@ -34,19 +39,23 @@ export default function (task, changeColumn, deleteTask,isEdit) {
             let currentDroppable = null;
             let Container = null;
             let moved = true;
-            let id = null;
+            let index = null;
             let arrPos = null;
+            let timer;
+            let containerTop;
+            let containerHeight;
 
             function onMouseMove(event) {
                 if (moved) {
                     //Task.style.border = `0.5px solid black`;
-                    Task.style.opacity = '80%';
-                    Task.style.backgroundColor = '#e1e1e1';
+                    Task.style.opacity = 0.99;
+                    Task.style.backgroundColor = '#ddf2d6';
                     Task.style.borderRadius = '6px';
                     Task.style.transformOrigin = `${shiftX}px ${shiftY}px`;
                     Task.style.transform = 'rotate(3deg)';
                     moved = false;
                 }
+                console.log(Task.style.opacity);
                 moveAt(event.pageX, event.pageY);
 
                 Task.style.visibility = 'hidden';
@@ -71,6 +80,24 @@ export default function (task, changeColumn, deleteTask,isEdit) {
 
                 let containerBelow = elemBelow.closest('.container') || Container;
 
+                let taskContainer = elemBelow.closest('.tasks-container');
+
+                if (taskContainer) {
+                    if (!containerTop) {
+                        containerTop = taskContainer.getBoundingClientRect().top;
+                        containerHeight = taskContainer.getBoundingClientRect().height;
+                    }
+                        if (event.pageY < containerTop + containerHeight / 4) {
+                            taskContainer.scrollTop -= 10;
+                        } else if (event.pageY > containerTop + containerHeight * 3 / 4) {
+                            taskContainer.scrollTop += 10;
+                        }
+
+
+                } else {
+
+                    containerTop = null;
+                }
 
                 if (containerBelow !== Container) {
 
@@ -81,7 +108,7 @@ export default function (task, changeColumn, deleteTask,isEdit) {
                     Container = containerBelow;
 
                     if (Container) {
-                        Container.querySelector('.edit').before(div);
+                        Container.querySelector('.tasks-container').append(div);
                     }
                 }
 
@@ -111,7 +138,7 @@ export default function (task, changeColumn, deleteTask,isEdit) {
                         let elemselfH;
                         let elements = Array.from(currentDroppable.querySelectorAll('.task'));
                         for (let element of elements) {
-                            if (element.id !== task) {
+                            if (element.id !== id) {
                                 if (!elemselfH) {
                                     let pos = element.getBoundingClientRect().top +
                                         element.getBoundingClientRect().height / 2;
@@ -133,29 +160,29 @@ export default function (task, changeColumn, deleteTask,isEdit) {
                         }
                     }
 
-                    let index;
+                    let lastIndex;
                     for (let i in arrPos) {
                         if (arrPos[i].pos > event.pageY) {
-                            index = i;
+                            lastIndex = i;
                             break;
                         }
                     }
 
-                    if (index) {
-                        if (id !== index || id == null) {
+                    if (lastIndex) {
+                        if (index !== lastIndex || index == null) {
                             div.remove();
-                            id = index;
-                            arrPos[index].element.before(div);
+                            index = lastIndex;
+                            arrPos[lastIndex].element.before(div);
 
                         }
                     } else {
 
-                        currentDroppable.querySelector('.edit').before(div);
-                        id = null;
+                        currentDroppable.querySelector('.tasks-container').append(div);
+                        index = null;
                     }
 
                 } else {
-                    id = null;
+                    index = null;
                     arrPos = null;
                 }
             }
@@ -163,6 +190,9 @@ export default function (task, changeColumn, deleteTask,isEdit) {
             document.addEventListener('mousemove', onMouseMove);
 
             Task.onmouseup = function () {
+                if (timer) {
+                    clearInterval(timer);
+                }
                 document.removeEventListener('mousemove', onMouseMove);
                 Task.onmouseup = null;
                 Task.style = style;
@@ -175,7 +205,7 @@ export default function (task, changeColumn, deleteTask,isEdit) {
                     deleteTask(Task.id);
                     return;
                 } else if (currentDroppable) {
-                    changeColumn(Task.id, currentDroppable.id, id);
+                    changeColumn(Task.id, currentDroppable.id, index);
                     id = null;
                     arrPos = null;
                     return;

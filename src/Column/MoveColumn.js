@@ -1,3 +1,5 @@
+
+
 export default function (column, changeTitlePlace, deleteColumn, isEdit) {
     let Title = document.getElementById(column);
     let Column = Title.closest('.droppable');
