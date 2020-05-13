@@ -71,7 +71,7 @@ let ButtonShow = styled.div`
   .i{
     align-self: center;
   }
-  height: 100px;
+  height: 70px;
   box-sizing: border-box;
   position: fixed; 
   bottom: -100px;
