@@ -46,7 +46,12 @@ let arrTasks = [
     {index: 5, task:  ' учить JS учить JSучить JSучитьJSучитьJSучитьJSучитьJSучитьJSучитьJS', column: 'Планируется'},
     {index: 6, task: 'учить JS', column: 'Планируется'},
     {index: 7, task: 'учить JS', column: 'Планируется'},
-
+    {index: 8, task: 'учить JS', column: 'Планируется'},
+    {index: 9, task: 'учить JS', column: 'Планируется'},
+    {index: 10, task: 'учить JS', column: 'Планируется'},
+    {index: 11, task:  ' учить JS учить JSучить JSучитьJSучитьJSучитьJSучитьJSучитьJSучитьJS', column: 'Планируется'},
+    {index: 12, task: 'учить JS', column: 'Планируется'},
+    {index: 13, task: 'учить JS', column: 'Планируется'},
     {index: 1, task: 'заняться спортом', column: 'Планируется'},
     {index: 2, task: 'изучить styled-components', column: 'В процессе'},
     {index: 3, task: 'овладеть React Hooks', column: 'В процессе'},
@@ -202,6 +207,7 @@ function App() {
     function addTask(task, title) {
         let index = tasks.filter((value) => (value.column === title)).length + 1;
         setTasks(tasks.concat([{
+            id: nanoid(),
             index: index,
             task: task,
             column: title,

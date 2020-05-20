@@ -73,7 +73,7 @@ const Task = styled.div`
       border-radius: 3px;
       transition: transform 200ms, opacity 200ms, color 200ms, height 1000ms;
       background: white;
-      box-shadow: 0px 1px 0px #4c4c4c;
+      box-shadow: 0 1px 0 #4c4c4c;
       :hover {
           background: #fcfcfc;
       }
@@ -133,11 +133,11 @@ const Task = styled.div`
         }
       }
       ${(props) => props.isEdit &&
-    'position: absolute;' +
-    'z-index: 1000;' +
-    'width: 320px;' +
-    'flex-direction: column;' +
-    'margin: 0;'
+        'position: absolute;' +
+        'z-index: 1000;' +
+        'width: 320px;' +
+        'flex-direction: column;' +
+        'margin: 0;'
 }
 `;
 
@@ -214,8 +214,9 @@ export default function ContainerTask(props) {
                     <>
                         <Text>{task}</Text>
                         <Buttons>
-                            <i className='im im-edit' onClick={edit}/>
+                            <i className='im im-edit' title='Редактировать' onClick={edit}/>
                             <i className='im im-x-mark-circle-o'
+                               title='Удалить'
                                onClick={() => deleteTask(id)}/>
                         </Buttons>
                     </>

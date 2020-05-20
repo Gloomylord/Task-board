@@ -1,7 +1,7 @@
 export default function (id, changeColumn, deleteTask, isEdit) {
     let Task = document.getElementById(id);
     let height = Task.getBoundingClientRect().height;
-
+    let offsetHeight = Task.offsetHeight;
     if (!isEdit) {
         Task.onmousedown = function onmousedown(event) {
 
@@ -16,14 +16,17 @@ export default function (id, changeColumn, deleteTask, isEdit) {
 
             let div = document.createElement('div');
             div.id = 'insertionPoint';
-            div.className = Task.className.replace('task','');
-            div.style.height = height + 'px';
-            div.style.backgroundColor = '#a0837d';
+            div.className = Task.className.replace('task', '');
+            div.style.padding = 0;
+            div.style.paddingTop = height + 'px';
+            div.style.background = '#a0837d';
             div.style.border = '';
+            div.style.opacity = 1;
             div.style.margin = Task.style.margin;
             div.style.borderRadius = '5px';
+            div.style.boxSizing = 'border-box';
             Task.before(div);
-            console.log(height,div.getBoundingClientRect().height);
+            console.log(offsetHeight, height, div.getBoundingClientRect().height);
             Task.style.position = 'absolute';
             Task.style.margin = 0;
             Task.style.zIndex = 1000;
@@ -44,18 +47,21 @@ export default function (id, changeColumn, deleteTask, isEdit) {
             let timer;
             let containerTop;
             let containerHeight;
+            let isScrolling = false;
 
             function onMouseMove(event) {
                 if (moved) {
-                    //Task.style.border = `0.5px solid black`;
-                    Task.style.opacity = 0.99;
+                    Task.style.opacity = 0.9;
                     Task.style.backgroundColor = '#ddf2d6';
                     Task.style.borderRadius = '6px';
                     Task.style.transformOrigin = `${shiftX}px ${shiftY}px`;
                     Task.style.transform = 'rotate(3deg)';
                     moved = false;
                 }
-                console.log(Task.style.opacity);
+                console.log(div.offsetHeight, div.getBoundingClientRect().height);
+                if (div.offsetHeight < height) {
+                    div.style.height = height + 'px';
+                }
                 moveAt(event.pageX, event.pageY);
 
                 Task.style.visibility = 'hidden';
@@ -72,7 +78,7 @@ export default function (id, changeColumn, deleteTask, isEdit) {
                 if (elemBelow.id === 'delete') {
                     Task.style.opacity = 0.3;
                 } else {
-                    Task.style.opacity = 0.8;
+                    Task.style.opacity = 0.90;
                 }
 
                 let droppableBelow = (!elemBelow.closest('#delete')) ? elemBelow.closest('.droppable') :
@@ -87,11 +93,13 @@ export default function (id, changeColumn, deleteTask, isEdit) {
                         containerTop = taskContainer.getBoundingClientRect().top;
                         containerHeight = taskContainer.getBoundingClientRect().height;
                     }
-                        if (event.pageY < containerTop + containerHeight / 4) {
-                            taskContainer.scrollTop -= 10;
-                        } else if (event.pageY > containerTop + containerHeight * 3 / 4) {
-                            taskContainer.scrollTop += 10;
-                        }
+                    if (event.pageY < containerTop + containerHeight / 4) {
+                        taskContainer.scrollTop -= 10;
+                        isScrolling = true;
+                    } else if (event.pageY > containerTop + containerHeight * 3 / 4) {
+                        taskContainer.scrollTop += 10;
+                        isScrolling = true;
+                    }
 
 
                 } else {
@@ -133,7 +141,8 @@ export default function (id, changeColumn, deleteTask, isEdit) {
                 }
 
                 if (currentDroppable && currentDroppable.className.indexOf('droppable') >= 0) {
-                    if (!arrPos) {
+                    if (!arrPos || isScrolling) {
+                        isScrolling = false;
                         arrPos = [];
                         let elemselfH;
                         let elements = Array.from(currentDroppable.querySelectorAll('.task'));
@@ -143,15 +152,15 @@ export default function (id, changeColumn, deleteTask, isEdit) {
                                     let pos = element.getBoundingClientRect().top +
                                         element.getBoundingClientRect().height / 2;
                                     arrPos.push({
-                                        element: element,
                                         pos: pos,
+                                        element: element,
                                     })
                                 } else {
                                     let pos = element.getBoundingClientRect().top +
                                         element.getBoundingClientRect().height / 2 - elemselfH;
                                     arrPos.push({
-                                        element: element,
                                         pos: pos,
+                                        element: element,
                                     })
                                 }
                             } else {
@@ -161,6 +170,7 @@ export default function (id, changeColumn, deleteTask, isEdit) {
                     }
 
                     let lastIndex;
+                    //console.log(arrPos);
                     for (let i in arrPos) {
                         if (arrPos[i].pos > event.pageY) {
                             lastIndex = i;
@@ -197,7 +207,7 @@ export default function (id, changeColumn, deleteTask, isEdit) {
                 Task.onmouseup = null;
                 Task.style = style;
                 div.remove();
-
+                console.log(arrPos);
                 if (currentDroppable) {
                     leaveDroppable(currentDroppable);
                 }

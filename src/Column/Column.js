@@ -130,9 +130,9 @@ const TasksContainer = styled.div`
       flex-direction: column;
       max-height: calc(100% - 110px);
       align-items: center;
-      overflow: auto;
+      overflow-y: auto;
+      overflow-x: hidden;
       padding: 2px 0;
-      box-sizing: border-box;
       > :first-child{
         margin-top: 0;
       }
@@ -201,7 +201,7 @@ export default function ContainerColumn(props) {
                 }}>
                     <div>{title}</div>
                     {addTask ?
-                        <i className='im im-x-mark' onClick={() => deleteColumn(title)}/> :
+                        <i className='im im-x-mark' title='Удалить блок' onClick={() => deleteColumn(title)}/> :
                         isEdit && title === editTitle ?
                             <i className='im im-minus' onClick={() => setIsEdit(false)}/> :
                             <i className='im im-plus'/>
@@ -225,7 +225,6 @@ export default function ContainerColumn(props) {
                                   title={title}
                                   deleteTask={deleteTask}
                                   changeTask={changeTask}
-
                             />))
                     }
                 </TasksContainer>
