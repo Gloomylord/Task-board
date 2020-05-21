@@ -32,27 +32,12 @@ let Delete = styled.div`
 
 `;
 
-let arrColumns = [
-    'Планируется',
-    'В процессе',
-    'Завершено',
-];
-
 let arrTasks = [
+    {index: 1, task: 'заняться спортом', column: 'Планируется'},
     {index: 1, task: 'учить JS', column: 'В процессе'},
-    {index: 2, task: 'учить JS', column: 'Планируется'},
+    {index: 2, task: ' учить JS учить JSучить JSучитьJSучитьJSучитьJSучитьJSучитьJSучитьJS', column: 'Планируется'},
     {index: 3, task: 'учить JS', column: 'Планируется'},
     {index: 4, task: 'учить JS', column: 'Планируется'},
-    {index: 5, task:  ' учить JS учить JSучить JSучитьJSучитьJSучитьJSучитьJSучитьJSучитьJS', column: 'Планируется'},
-    {index: 6, task: 'учить JS', column: 'Планируется'},
-    {index: 7, task: 'учить JS', column: 'Планируется'},
-    {index: 8, task: 'учить JS', column: 'Планируется'},
-    {index: 9, task: 'учить JS', column: 'Планируется'},
-    {index: 10, task: 'учить JS', column: 'Планируется'},
-    {index: 11, task:  ' учить JS учить JSучить JSучитьJSучитьJSучитьJSучитьJSучитьJSучитьJS', column: 'Планируется'},
-    {index: 12, task: 'учить JS', column: 'Планируется'},
-    {index: 13, task: 'учить JS', column: 'Планируется'},
-    {index: 1, task: 'заняться спортом', column: 'Планируется'},
     {index: 2, task: 'изучить styled-components', column: 'В процессе'},
     {index: 3, task: 'овладеть React Hooks', column: 'В процессе'},
     {index: 2, task: "сделять Drag'n'Drop", column: 'Завершено'},
@@ -65,7 +50,6 @@ function addId(arr) {
             return value;
         }
     );
-    console.log('arr', arr);
     return arr;
 }
 
@@ -96,7 +80,6 @@ function App() {
                 taskIndex = value.index;
             }
         });
-        console.log('task, column', id, column, index);
         if (!index) {
             let index;
             if (taskColumn === column) {
@@ -131,7 +114,6 @@ function App() {
 
 
         } else {
-            console.log('здесь');
             if (taskColumn !== column) {
                 setTasks(tasks.map((value) => {
                     if (value.column === column) {
@@ -151,7 +133,6 @@ function App() {
                 }));
             } else {
                 index = +index + 1;
-                console.log(+index + 1, taskIndex);
                 setTasks(tasks.map((value) => {
                     if (value.column === column) {
                         if (value.id === id) {
@@ -170,18 +151,6 @@ function App() {
                 }));
             }
         }
-
-        //
-        // a.forEach(({index, task, column}) => {
-        //     console.log(index, task, column);
-        // });
-
-        // let newTasks = [...tasks];
-        // let index = newTasks.findIndex((value) => value.task === task);
-        // if (index !== -1) {
-        //     newTasks[index].column = column;
-        //     setTasks(newTasks);
-        // }
     }
 
     function deleteTask(id) {
@@ -240,22 +209,15 @@ function App() {
         if (!isBefore) index += 1;
 
         if (index > lastId) {
-            let value = arr.splice(lastId, 1);
+            arr.splice(lastId, 1);
             arr.splice(index - 1, 0, title);
-            console.log(index, lastId, arr, value[0], title);
         } else {
-            let value = arr.splice(lastId, 1);
+            arr.splice(lastId, 1);
             arr.splice(index, 0, title);
-            console.log(index, lastId, arr, value[0], title);
         }
         setColumn(arr);
     }
 
-
-
-
-    console.log('-------------------------');
-    console.log(editTitle);
 
     return (<>
             <div className="App">

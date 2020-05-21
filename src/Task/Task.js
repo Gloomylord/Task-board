@@ -50,7 +50,7 @@ const Button = styled.button`
       }
 `;
 
-const  Text = styled.div`
+const Text = styled.div`
   align-self: center;
   text-align: start;
   white-space: pre-wrap;
@@ -133,17 +133,17 @@ const Task = styled.div`
         }
       }
       ${(props) => props.isEdit &&
-        'position: absolute;' +
-        'z-index: 1000;' +
-        'width: 320px;' +
-        'flex-direction: column;' +
-        'margin: 0;'
+    'position: absolute;' +
+    'z-index: 1000;' +
+    'width: 320px;' +
+    'flex-direction: column;' +
+    'margin: 0;'
 }
 `;
 
 
 export default function ContainerTask(props) {
-    let {task, changeTask, deleteTask, changeColumn,id} = props;
+    let {task, changeTask, deleteTask, changeColumn, id} = props;
     let [isEdit, setIsEdit] = useState(false);
     let [value, setValue] = useState(task);
     let [posY, setPosY] = useState(null);
@@ -155,7 +155,7 @@ export default function ContainerTask(props) {
     const taskBackground = useRef(null);
 
     useEffect(() => {
-        moveTask(id, changeColumn, deleteTask,isEdit);
+        moveTask(id, changeColumn, deleteTask, isEdit);
         return () => {
             document.getElementById(id).onmousedown = null;
         }
@@ -166,14 +166,14 @@ export default function ContainerTask(props) {
             inputEl.current.focus();
         }
 
-        if(mainRef.current && posY && posX){
+        if (mainRef.current && posY && posX) {
             mainRef.current.style.top = posY + 'px';
             mainRef.current.style.left = posX + 'px';
         }
 
-        if(taskBackground.current && height && width){
+        if (taskBackground.current && height && width) {
             console.log(height, width);
-            taskBackground.current.style.width =  width + 'px';
+            taskBackground.current.style.width = width + 'px';
             taskBackground.current.style.height = height + 'px';
         }
     });
@@ -183,8 +183,8 @@ export default function ContainerTask(props) {
     }
 
     function save() {
-        if (value ) {
-            changeTask(value , id);
+        if (value) {
+            changeTask(value, id);
             setIsEdit(!isEdit);
         } else {
             inputEl.current.placeholder = 'пусто';
@@ -195,18 +195,18 @@ export default function ContainerTask(props) {
         setWidth(mainRef.current.getBoundingClientRect().width);
         setHeight(mainRef.current.getBoundingClientRect().height);
         setPosX(mainRef.current.getBoundingClientRect().left);
-        setPosY((mainRef.current.getBoundingClientRect().top  ));
+        setPosY((mainRef.current.getBoundingClientRect().top));
         setIsEdit(!isEdit);
     }
 
 
     return (<>
-            {isEdit && <BackgroundBlock ref={taskBackground} />}
+            {isEdit && <BackgroundBlock ref={taskBackground}/>}
             {isEdit && <Background className='full' onClick={() => setIsEdit(!isEdit)}/>}
             <Task className='task' ref={mainRef} id={id} isEdit={isEdit}>
                 {(isEdit) ?
                     <>
-                        <textarea  onChange={changeValue} ref={inputEl} defaultValue={task}/>
+                        <textarea onChange={changeValue} ref={inputEl} defaultValue={task}/>
                         <Button onClick={save}>
                             <div onClick={save}>Сохранить</div>
                         </Button>

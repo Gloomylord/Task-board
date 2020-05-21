@@ -1,9 +1,7 @@
-
-
 export default function (column, changeTitlePlace, deleteColumn, isEdit) {
     let Title = document.getElementById(column);
     let Column = Title.closest('.droppable');
-    let ContainerSelf = Title.closest('.container') ;
+    let ContainerSelf = Title.closest('.container');
     let width = Column.getBoundingClientRect().width;
     let height = Column.getBoundingClientRect().height;
     if (!isEdit) {
@@ -80,15 +78,15 @@ export default function (column, changeTitlePlace, deleteColumn, isEdit) {
 
                 let containerBelow = elemBelow.closest('.container');
 
-                if (containerBelow ) {
+                if (containerBelow) {
 
-                    Container = containerBelow ;
+                    Container = containerBelow;
 
                     if (Container) {
                         div.remove();
                         let center = Container.getBoundingClientRect().left +
                             Container.getBoundingClientRect().width / 2;
-                        if(columnBelow !== Container.querySelector('.droppable').id ) {
+                        if (columnBelow !== Container.querySelector('.droppable').id) {
                             if (center > event.pageX) {
                                 Container.after(div);
                                 columnBelow = Container.querySelector('.droppable').id;

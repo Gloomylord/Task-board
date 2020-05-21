@@ -1,7 +1,6 @@
 export default function (id, changeColumn, deleteTask, isEdit) {
     let Task = document.getElementById(id);
     let height = Task.getBoundingClientRect().height;
-    let offsetHeight = Task.offsetHeight;
     if (!isEdit) {
         Task.onmousedown = function onmousedown(event) {
 
@@ -26,11 +25,9 @@ export default function (id, changeColumn, deleteTask, isEdit) {
             div.style.borderRadius = '5px';
             div.style.boxSizing = 'border-box';
             Task.before(div);
-            console.log(offsetHeight, height, div.getBoundingClientRect().height);
             Task.style.position = 'absolute';
             Task.style.margin = 0;
             Task.style.zIndex = 1000;
-            console.log(div.style);
 
             moveAt(event.pageX, event.pageY);
 
@@ -44,7 +41,6 @@ export default function (id, changeColumn, deleteTask, isEdit) {
             let moved = true;
             let index = null;
             let arrPos = null;
-            let timer;
             let containerTop;
             let containerHeight;
             let isScrolling = false;
@@ -58,7 +54,6 @@ export default function (id, changeColumn, deleteTask, isEdit) {
                     Task.style.transform = 'rotate(3deg)';
                     moved = false;
                 }
-                console.log(div.offsetHeight, div.getBoundingClientRect().height);
                 if (div.offsetHeight < height) {
                     div.style.height = height + 'px';
                 }
@@ -167,6 +162,7 @@ export default function (id, changeColumn, deleteTask, isEdit) {
                                 //elemselfH = element.getBoundingClientRect().height;
                             }
                         }
+                        console.log(arrPos);
                     }
 
                     let lastIndex;
@@ -200,14 +196,10 @@ export default function (id, changeColumn, deleteTask, isEdit) {
             document.addEventListener('mousemove', onMouseMove);
 
             Task.onmouseup = function () {
-                if (timer) {
-                    clearInterval(timer);
-                }
                 document.removeEventListener('mousemove', onMouseMove);
                 Task.onmouseup = null;
                 Task.style = style;
                 div.remove();
-                console.log(arrPos);
                 if (currentDroppable) {
                     leaveDroppable(currentDroppable);
                 }

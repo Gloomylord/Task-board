@@ -22,7 +22,7 @@ const Column = styled.div`
       border-radius: 6px;
       margin: 10px;
       ${(props) => !props.addTask && `background-color: rgba(255,255,255,0.4);` +
-      `:hover{
+    `:hover{
           background-color: rgba(255,255,255,0.5);
        }
        :active{
@@ -62,7 +62,7 @@ const Title = styled.div`
             opacity: 1;
          }
       }
-      ${props => !props.addTask &&`
+      ${props => !props.addTask && `
         :hover {
             color: #333333;
             .im{
@@ -189,9 +189,9 @@ export default function ContainerColumn(props) {
     return (
         <Container id={'t' + title} className={addTask && 'container'}>
             <Column id={title} className={addTask && 'droppable'} addTask={addTask}>
-                <Title id={(addTask) ? 'm' + title : ''} addTask={addTask}  onClick={()=>{
-                    if(!addTask ) {
-                        if(!isEdit) {
+                <Title id={(addTask) ? 'm' + title : ''} addTask={addTask} onClick={() => {
+                    if (!addTask) {
+                        if (!isEdit) {
                             setIsEdit(true);
                             setEditTitle(title);
                         } else {
